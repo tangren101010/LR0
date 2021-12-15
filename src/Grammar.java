@@ -7,9 +7,9 @@ public class Grammar {
     Set<String> VT;//终结符集
     Set<Production> P;//规则集
     String S;//开始符
-    Set<IE> IESet;//活前缀项目集间的边集
-    ArrayList<Set<Production>> IList;//项目集的数组
-    ArrayList<Production> PList;//规则集的数组
+    Set<IE> IESet;//活前缀项目集间的边集,项目集-箭弧-项目集
+    ArrayList<Set<Production>> IList;//项目集的数组，包含该项目集的所有项目
+    ArrayList<Production> PList;//规则集的数组，文法G‘中所有的产生式
     String[][] LRTable;//存放LR0分析表的二维数组
     ArrayList<String> tableHead;
     Boolean isLRO = true;
@@ -25,7 +25,7 @@ public class Grammar {
         this.S = "S'";
         VN = new HashSet<>();
         VT = new HashSet<>();
-        P = new HashSet<>();
+        P = new HashSet<>();//规则集，文法G‘中所有的产生式
         VN.add(S);
         P.add(new Production(this.S + "->" + S));
         for (int i = 0; i < ip.length; i++) {
@@ -68,7 +68,7 @@ public class Grammar {
         Set<String> nV = new HashSet<>();//点后面的非终结符
         int ISize;
         do {
-            ISize = I.size();
+            ISize = I.size();//项目集
             for (Production i : I) {
                 String iRight = i.right;
                 int Di = iRight.indexOf(Dian);
@@ -91,36 +91,36 @@ public class Grammar {
     private void calculationDFA() {
         IESet = new HashSet<>();
         Queue<Set<Production>> queue = new LinkedList<>();
-        queue.add(IList.get(0));
+        queue.add(IList.get(0));//将项目集的第一个元素加入队列
         Set<Production> nI;
-        Map<String, Set<Production>> nIMap;
+        Map<String, Set<Production>> nIMap;//nIMap的key，nIMap是一个字典,存放键值对
 
-        while (!queue.isEmpty()) {
+        while (!queue.isEmpty()) {      //对一个项目集里面的每个项目都进行活前缀后移一位
             Set<Production> iI = queue.poll();
             nIMap = new HashMap<>();
-            //求核
+            //活前缀后移一位后的不同结果
             for (Production i : iI) {
                 String iRight = i.right;
-                int Di = iRight.indexOf(Dian);
-                if (Di + 1 < iRight.length()) {
-                    String iV = iRight.substring(Di + 1, Di + 2);
-                    nI = nIMap.get(iV);
-                    if (nI == null) {
+                int Di = iRight.indexOf(Dian);//找出点的位置
+                if (Di + 1 < iRight.length()) {   //表示点后移一位，项目中点的后面还有字符的情况
+                    String iV = iRight.substring(Di + 1, Di + 2);//iV就是点后面的字符
+                    nI = nIMap.get(iV);//设置键值对
+                    if (nI == null) { //如果nI为空
                         nI = new HashSet<>();
                         nI.add(i.moveDian());//移点
-                        nIMap.put(iV, nI);
+                        nIMap.put(iV, nI);//将移点后的项目加入
                     } else {
-                        nI.add(i.moveDian());
+                        nI.add(i.moveDian());//
                     }
                 }
             }
-            //求闭包
+            //对活前缀后移一位，后面还有字符的情况，进行闭包运算
             int iList = IList.indexOf(iI);
             for (String v : nIMap.keySet()) {
                 nI = nIMap.get(v);
-                calculationCLOSURE(nI);
+                calculationCLOSURE(nI);//闭包运算
 
-                int jList = IList.indexOf(nI);
+                int jList = IList.indexOf(nI);//检查进行闭包运算得到的项目集是否已经存在，如果不存在将其加入
                 if (jList == -1) {
                     queue.add(nI);
                     IList.add(nI);
@@ -228,22 +228,6 @@ public class Grammar {
                                 return false;
                         }
                     }
-//                    if (VT.contains(a)) {//a为终结符 A->α･
-//                        for (int ia = 0; ia < VT.size() + 1; ia++) {
-//                            if (LRTable[k][ia] == null)
-//                                LRTable[k][ia] = "r" + PList.indexOf(ip.deleteDian());
-//                            else
-//                                return false;
-//                        }
-//                    }else{//A->B･
-//                        if(ip.getLeft().equals(S)){
-//                            if (LRTable[k][VT.size()] == null)
-//                                LRTable[k][VT.size()] = "acc";
-//                            else
-//                                return false;
-//                        }
-//                    }
-
                 }
             }
         }
@@ -263,7 +247,7 @@ public class Grammar {
         return true;
     }
 
-    //判断st是否符合文法，LR0分析器
+    //判断句子是否符合文法，LR0分析器
     public boolean contains(String st) throws Exception {
         if (isLRO) {
             st += "#";

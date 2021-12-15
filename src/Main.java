@@ -7,11 +7,11 @@ public class Main {
         Grammar G=new Grammar(P,S);
 
         G.out();
-        try {
-            System.out.print(G.contains("bccd"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            System.out.print(G.contains("bccd"));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 //        Production a=new Production("A->c|B|d");
 //        Production b=new Production("A->B|c|d");
 //        if(a.equals(b)){
