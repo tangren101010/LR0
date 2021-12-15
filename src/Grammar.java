@@ -10,7 +10,7 @@ public class Grammar {
     Set<IE> IESet;//活前缀项目集间的边集
     ArrayList<Set<Production>> IList;//项目集的数组
     ArrayList<Production> PList;//规则集的数组
-    String[][] LRTable;
+    String[][] LRTable;//存放LR0分析表的二维数组
     ArrayList<String> tableHead;
     Boolean isLRO = true;
 
@@ -30,7 +30,7 @@ public class Grammar {
         P.add(new Production(this.S + "->" + S));
         for (int i = 0; i < ip.length; i++) {
             Production p = new Production(ip[i]);
-            VN.add(p.getLeft());
+            VN.add(p.getLeft());//添加所有的非终结符
             if (p.isSimple()) {
                 P.add(p);
                 String pr = p.getRight();
@@ -42,23 +42,21 @@ public class Grammar {
                     P.add(sp);
                     String spr = sp.getRight();
                     for (int j = 0; j < spr.length(); j++) {
-                        VT.add(String.valueOf(spr.charAt(j)));
+                        VT.add(String.valueOf(spr.charAt(j)));//先将右部所有的字符加入到终结符集合中，在后续会进行删除
                     }
                 }
             }
         }
-        VT.removeAll(VN);
-        VT.remove(String.valueOf(Njump));
+        VT.removeAll(VN);//删除终结符中的非终结符
+        VT.remove(String.valueOf(Njump));//删除空
 
         Set<Production> I0 = new HashSet<>();//活前缀项目集的开始集
-        I0.add(new Production(this.S + "->" + Dian + S));
+        I0.add(new Production(this.S + "->" + Dian + S));//I0: S'->E
         calculationCLOSURE(I0);
-        IList = new ArrayList<>();
-        IList.add(I0);
-//        System.out.println(I0);
+        IList = new ArrayList<>();//项目集
+        IList.add(I0);//将I0添加至项目集
         calculationDFA();
-//        System.out.println(ISet);
-//        System.out.println("s");
+        //如果创建LR0分析表失败，则输出该文法不是LR(0)文法
         if (!(isLRO = createLRTable())) {
             System.out.println("NO LR(0)!");
         }
@@ -134,23 +132,31 @@ public class Grammar {
         }
     }
 
+    /*
+    实现LR0表的输出
+     */
     public void out() {
+        //输出非终结符
         System.out.println("VN:");
         for (Object iVN : VN) {
             System.out.println(iVN);
         }
+        //输出终结符
         System.out.println("VT:");
         for (Object iVT : VT) {
             System.out.println(iVT);
         }
+        //输出该文法
         System.out.println("P:");
         for (Object ip : PList) {
             System.out.println(ip.toString());
         }
         System.out.println("S:");
         System.out.println(S);
+        //输出识别活前缀的DFA
         System.out.println("IESet:");
         System.out.println(IESet);
+        //输出LR0分析表
         System.out.println("LR0Table:");
         System.out.printf("%30s", "LR0");
         for (String i : tableHead) {

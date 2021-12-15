@@ -35,7 +35,7 @@ public class Production {//语句
     }
 
     public boolean isSimple() {
-        if (right.indexOf("|") == -1)
+        if (right.indexOf("|") == -1)//查找有没有|，如果没有返回TRUE
             return true;
         else
             return false;
@@ -43,13 +43,13 @@ public class Production {//语句
 
     public ArrayList<Production> toSimple() {
         ArrayList<Production> productionList = new ArrayList<Production>();
-        String b[] = right.split("\\|");
+        String b[] = right.split("\\|");//获取以|符号分割的各个右部
         for (int i = 0; i < b.length; i++) {
             // System.out.println(b[i]);
             Production ib = new Production(left + "->" + b[i]);
             productionList.add(ib);
         }
-        return productionList;
+        return productionList;//返回所有以同一非终结符为左部的文法
     }
 
     public String toString() {
