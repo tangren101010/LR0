@@ -6,29 +6,13 @@ public class Main {
         String P[]={"E->aA|bBC","C->"+Njump,"A->cA|d","B->cB|d"};//规则集
         Grammar G=new Grammar(P,S);
 
-        G.out();
+        G.out();//输出LRO分析表
 //        try {
 //            System.out.print(G.contains("bccd"));
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-//        Production a=new Production("A->c|B|d");
-//        Production b=new Production("A->B|c|d");
-//        if(a.equals(b)){
-//            System.out.println("a==b");
-//        }else {
-//            System.out.println("a!=b");
-//        }
-//        Set<Production> aP=new HashSet<>();
-//        aP.add(b);
-//        aP.add(a);
-//        Set<Production> aP2=new HashSet<>();
-//        aP2.add(b);
-//        aP2.add(a);
-////        System.out.println(aP);
-//        IE as=new IE(aP,"s",aP);
-//        IE ab=new IE(aP2,"s",aP2);
-//        System.out.println(as.hashCode()==ab.hashCode());
+
 
     }
 }

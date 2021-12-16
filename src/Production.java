@@ -63,16 +63,15 @@ public class Production {//语句
         }else{
             a=new Production(left + "->" +Dian +right);
         }
-
         return a;
     }
-    public Production deleteDian() {//去除点
+    public Production deleteDian() {  //去除点
         Production a=new Production();
         a.setLeft(left);
         int iD=right.indexOf(Dian);
         StringBuffer ab=new StringBuffer(right);
         ab.deleteCharAt(iD);
-        if(ab.length()==0){//A->･ 转 A->ε
+        if(ab.length()==0){   //A->･ 转 A->ε
             ab.append(Njump);
         }
         a.setRight(ab.toString());
@@ -88,6 +87,8 @@ public class Production {//语句
         a.setRight(ab.toString());
         return a;
     }
+
+
     @Override
     public boolean equals(Object obj) {
         Production other = (Production) obj;
