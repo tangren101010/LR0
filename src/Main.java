@@ -7,11 +7,11 @@ public class Main {
         Grammar G=new Grammar(P,S);
 
         G.out();//输出LRO分析表
-//        try {
-//            System.out.print(G.contains("bccd"));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            System.out.print(G.contains("bccd"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
     }
